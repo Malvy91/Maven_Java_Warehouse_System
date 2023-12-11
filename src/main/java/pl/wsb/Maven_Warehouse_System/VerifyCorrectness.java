@@ -1,3 +1,5 @@
+package pl.wsb.Maven_Warehouse_System;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +19,7 @@ public class VerifyCorrectness {
     public void verifyClientInMapById(String clientId, Map<String, Client> map) {
         System.out.println(map.values());
         if (!map.containsKey(clientId)){
-            throw new ClientNotFoundException("Client not fount in database.");
+            throw new ClientNotFoundException("pl.wsb.Maven_Warehouse_System.Client not fount in database.");
         }
     }
     double getTotalVolumeOccupiedByAllClients(){
@@ -32,7 +34,7 @@ public class VerifyCorrectness {
     public void verifyWarehouseCapacity(double mass) {
         if (getTotalVolumeOccupiedByAllClients() < warehouseMaxSize){
             if (mass > (warehouseMaxSize - getTotalVolumeOccupiedByAllClients())){
-                throw new FullWarehouseException("Warehouse is full. We cannot accept the goods.");
+                throw new FullWarehouseException("pl.wsb.Maven_Warehouse_System.Warehouse is full. We cannot accept the goods.");
             }
         }
     }

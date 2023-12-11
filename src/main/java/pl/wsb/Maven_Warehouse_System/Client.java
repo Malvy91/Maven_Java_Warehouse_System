@@ -1,3 +1,5 @@
+package pl.wsb.Maven_Warehouse_System;
+
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;

@@ -1,3 +1,5 @@
+package pl.wsb.Maven_Warehouse_System;
+
 public class ClientIdGenerator {
     // declaration of variable, where we will deliver client id
     private String clientId;

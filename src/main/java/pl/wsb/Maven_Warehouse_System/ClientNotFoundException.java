@@ -1,3 +1,5 @@
+package pl.wsb.Maven_Warehouse_System;
+
 public class ClientNotFoundException extends RuntimeException{
     public ClientNotFoundException(){
     }

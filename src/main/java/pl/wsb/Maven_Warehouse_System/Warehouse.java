@@ -1,3 +1,5 @@
+package pl.wsb.Maven_Warehouse_System;
+
 import java.util.List;
 import java.util.Map;
 

@@ -1,3 +1,5 @@
+package pl.wsb.Maven_Warehouse_System;
+
 import java.time.LocalDate;
 import java.lang.*;
 import java.util.ArrayList;
@@ -5,8 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/* WarehouseHandlingSystem implements Clients and Warehouse interfaces, what means that
-WarehouseHandlingSystem contains the methods implementation for both interfaces.
+/* pl.wsb.Maven_Warehouse_System.WarehouseHandlingSystem implements pl.wsb.Maven_Warehouse_System.Clients and pl.wsb.Maven_Warehouse_System.Warehouse interfaces, what means that
+pl.wsb.Maven_Warehouse_System.WarehouseHandlingSystem contains the methods implementation for both interfaces.
  */
 public class WarehouseHandlingSystem implements Clients, Warehouse{
     private final Client Client = new Client();
@@ -16,7 +18,7 @@ public class WarehouseHandlingSystem implements Clients, Warehouse{
     public LocalDate creationDate;
     WarehouseHandlingSystem(){
     }
-    // Clients interface implementation
+    // pl.wsb.Maven_Warehouse_System.Clients interface implementation
     @Override
     public String createNewClient(String firstName, String lastName){
         verifyCorrectness.assertString("name", firstName);
@@ -27,8 +29,6 @@ public class WarehouseHandlingSystem implements Clients, Warehouse{
 
         Client clientObject = Client.createClientObject(firstName, lastName, clientId, creationDate);
         Client.clients.put(clientId, clientObject);
-        System.out.println(Client.clients.keySet());
-        System.out.println(Client.clients.values());
         return clientId;
     }
     @Override
@@ -47,7 +47,7 @@ public class WarehouseHandlingSystem implements Clients, Warehouse{
         String clientFirstName = Client.getFirstName(clientId);
         String clientLastName = Client.getLastName(clientId);
         String clientFirstAndLastName = clientFirstName + " " + clientLastName;
-        System.out.println("Clients name and surname: " + clientId + ": " + clientFirstAndLastName );
+        System.out.println("pl.wsb.Maven_Warehouse_System.Clients name and surname: " + clientId + ": " + clientFirstAndLastName );
         return clientFirstAndLastName;
     }
     @Override
@@ -61,9 +61,9 @@ public class WarehouseHandlingSystem implements Clients, Warehouse{
         verifyCorrectness.verifyClientInMapById(clientId, Client.clients);
         boolean isPremium = Client.getPremium(clientId);
         if (isPremium){
-            System.out.println("Client " + clientId + " has premium status." );
+            System.out.println("pl.wsb.Maven_Warehouse_System.Client " + clientId + " has premium status." );
         } else {
-            System.out.println("Client " + clientId + " has no premium status, yet. Please, suggest him/her available packages." );
+            System.out.println("pl.wsb.Maven_Warehouse_System.Client " + clientId + " has no premium status, yet. Please, suggest him/her available packages." );
         }
         return isPremium;
     }
@@ -83,7 +83,7 @@ public class WarehouseHandlingSystem implements Clients, Warehouse{
         return premiumClients;
         }
 
-    // Warehouse implementation
+    // pl.wsb.Maven_Warehouse_System.Warehouse implementation
     public void addMetalIngot(String clientId, SupportedMetalType metalType, double mass){
         Map<SupportedMetalType, Double> metalTypesToMassMap;
         double totalMass;
@@ -93,8 +93,6 @@ public class WarehouseHandlingSystem implements Clients, Warehouse{
         verifyCorrectness.verifyMetalCorrectness(metalType);
 
         metalTypesToMassMap = getMetalTypesToMassStoredByClient(clientId);
-        System.out.println("metoda addMetalIngot");
-        System.out.println(metalTypesToMassMap);
         if (metalTypesToMassMap == null){
             Map<SupportedMetalType, Double> newMetalTypesToMassMap = new HashMap<SupportedMetalType, Double>();
             newMetalTypesToMassMap.put(metalType, mass);

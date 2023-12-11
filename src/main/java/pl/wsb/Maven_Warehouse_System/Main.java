@@ -1,16 +1,18 @@
+package pl.wsb.Maven_Warehouse_System;
+
 public class Main {
     public static void main(String[] args) {
         WarehouseHandlingSystem warehouseHandlingSystem = new WarehouseHandlingSystem();
         Clients clients = warehouseHandlingSystem;
         Warehouse warehouse= warehouseHandlingSystem;
 
-        System.out.println("Clients account created. They client Id: " + clients.createNewClient("Malwina", "Wajdzik"));
-        System.out.println("Clients account created. They client Id: " + clients.createNewClient("Krysia", "Tomczak"));
-        System.out.println("Clients account created. They client Id: " + clients.createNewClient("Aleksandra", "Wiktoria"));
-        System.out.println("Client " + clients.activatePremiumAccount("KT1") + "has a set up premium account");
+        System.out.println("pl.wsb.Maven_Warehouse_System.Clients account created. They client Id: " + clients.createNewClient("Malwina", "Wajdzik"));
+        System.out.println("pl.wsb.Maven_Warehouse_System.Clients account created. They client Id: " + clients.createNewClient("Krysia", "Tomczak"));
+        System.out.println("pl.wsb.Maven_Warehouse_System.Clients account created. They client Id: " + clients.createNewClient("Aleksandra", "Wiktoria"));
+        System.out.println("pl.wsb.Maven_Warehouse_System.Client " + clients.activatePremiumAccount("KT1") + "has a set up premium account");
         System.out.println("Has client premium account: " + clients.isPremiumClient("KT1"));
         System.out.println("Full name of client with id KT1 is: " + clients.getClientFullName("KT1"));
-        System.out.println("Client KT1 record was created on: " + clients.getClientCreationDate("KT1") );
+        System.out.println("pl.wsb.Maven_Warehouse_System.Client KT1 record was created on: " + clients.getClientCreationDate("KT1") );
         System.out.println("Has client KT1 premium account: " + clients.isPremiumClient("KT1"));
         System.out.println("Has client MW0 premium account: " + clients.isPremiumClient("MW0"));
         System.out.println("Number of clients in base: " + clients.getNumberOfClients());

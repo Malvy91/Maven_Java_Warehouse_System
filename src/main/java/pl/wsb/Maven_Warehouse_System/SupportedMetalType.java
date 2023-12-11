@@ -1,3 +1,5 @@
+package pl.wsb.Maven_Warehouse_System;
+
 public enum SupportedMetalType {
     COPPER(8960),
     TIN(7260),
