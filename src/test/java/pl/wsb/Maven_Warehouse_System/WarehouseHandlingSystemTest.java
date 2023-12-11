@@ -37,6 +37,24 @@ class WarehouseHandlingSystemTest {
         Assertions.assertEquals("AW2", newClientId);
     }
     @Test
+    @DisplayName("Check if app can create client without first name")
+    void checkIfCanWeCreateClientWithoutFirstName() {
+        // given - map with two clients, they have some metals in magazine
+        // when
+        String newClientId = warehouseHandlingSystem.createNewClient("", "Wiktoria");
+        // then
+        Assertions.assertEquals("First name is unknown.", newClientId);
+    }
+    @Test
+    @DisplayName("Check if app can create client without last name")
+    void checkIfCanWeCreateClientWithoutLastName() {
+        // given - map with two clients, they have some metals in magazine
+        // when
+        String newClientId = warehouseHandlingSystem.createNewClient("Aleksandra", "");
+        // then
+        Assertions.assertEquals("Last name is unknown.", newClientId);
+    }
+    @Test
     @DisplayName("Check possibility of activating a premium account")
     void checkIfPossibleToActivatePremiumAccount() {
         // given - map with two clients, they have some metals in magazine
@@ -45,6 +63,16 @@ class WarehouseHandlingSystemTest {
         Boolean isClientPremium = warehouseHandlingSystem.isPremiumClient("MW0");
         // then
         Assertions.assertEquals(true, isClientPremium);
+    }
+    @Test
+    @DisplayName("Check possibility of activating a premium account, when use has already premium status")
+    void checkIfPossibleToActivatePremiumAccountForPremiumUser() {
+        // given - map with two clients, they have some metals in magazine
+        // when
+        warehouseHandlingSystem.activatePremiumAccount("MW0");
+        String premiumStatus = warehouseHandlingSystem.activatePremiumAccount("MW0");
+        // then
+        Assertions.assertEquals("Client has premium status!", premiumStatus);
     }
     @Test
     @DisplayName("Check if correct user received premium account")
@@ -215,6 +243,19 @@ class WarehouseHandlingSystemTest {
         Assertions.assertEquals(expectedMetalTypesToMass, storedMetalTypesToMassMW0);
     }
     @Test
+    @DisplayName("Check if there is possibility to overwrite the mass of existing metal in users' map")
+    void checkAddMetalIngotForExistingMetal() {
+        // given - map with two clients, they have some metals in magazine
+        warehouseHandlingSystem.addMetalIngot("MW0", GOLD, 1000);
+        Map<SupportedMetalType, Double> storedMetalTypesToMassMW0 = warehouseHandlingSystem.getMetalTypesToMassStoredByClient("MW0");
+        // when
+        Map<SupportedMetalType, Double> expectedMetalTypesToMass = new HashMap<>();
+        expectedMetalTypesToMass.put(GOLD, 1300.0);
+        expectedMetalTypesToMass.put(COPPER, 2000.0);
+        // then
+        Assertions.assertEquals(expectedMetalTypesToMass, storedMetalTypesToMassMW0);
+    }
+    @Test
     @DisplayName("Check what is the total volume occupied by client")
     void checkWhatIsTheTotalVolumeOccupiedByClient() {
         // given - map with two clients
@@ -229,9 +270,31 @@ class WarehouseHandlingSystemTest {
     void checkSystemReactionOnUnknownUserForGetTotalVolumeOccupiedByClient() {
         // given - map with two clients, they have some metals in magazine
         // when
-
+        double totalVolumeOccupiedByClient = warehouseHandlingSystem.getTotalVolumeOccupiedByClient("AA8");
         // then
-
+        Assertions.assertEquals(0, totalVolumeOccupiedByClient);
+    }
+    @Test
+    @DisplayName("Check system reaction on full warehouse")
+    void checkSystemReactionOnFullWarehouse() {
+        // given - map with two clients, they have some metals in magazine
+        warehouseHandlingSystem.addMetalIngot("KT1", PLATINUM, 215000000);
+        // when
+        List<SupportedMetalType> storedMetalTypeKT1 = warehouseHandlingSystem.getStoredMetalTypesByClient("KT1");
+        List<SupportedMetalType> expectedMetalTypes = new ArrayList<>(Collections.singleton(GOLD));
+        // then
+        Assertions.assertEquals( expectedMetalTypes, storedMetalTypeKT1);
+    }
+    @Test
+    @DisplayName("Check system reaction on prohibited metal type")
+    void checkSystemReactionOnProhibitedMetalType() {
+        // given - map with two clients, they have some metals in magazine
+        warehouseHandlingSystem.addMetalIngot("KT1", UNKNOWN, 200.0);
+        // when
+        List<SupportedMetalType> storedMetalTypeKT1 = warehouseHandlingSystem.getStoredMetalTypesByClient("KT1");
+        List<SupportedMetalType> expectedMetalTypes = new ArrayList<>(Collections.singleton(GOLD));
+        // then
+        Assertions.assertEquals( expectedMetalTypes, storedMetalTypeKT1);
     }
     @Test
     @DisplayName("Check what metal types are stored by client")
@@ -250,9 +313,10 @@ class WarehouseHandlingSystemTest {
     @DisplayName("Check system reaction on unknown user for 'getStoredMetalTypesByClient' calling")
     void checkSystemReactionOnUnknownUserForGetStoredMetalTypesByClient() {
         // given - map with two clients, they have some metals in magazine
+        List<SupportedMetalType> storedMetalTypeAA8 = warehouseHandlingSystem.getStoredMetalTypesByClient("AA8");
         // when
-
+        List<SupportedMetalType> expectedMetalTypes = new ArrayList<>();
         // then
-
+        Assertions.assertEquals(expectedMetalTypes, storedMetalTypeAA8);
     }
 }

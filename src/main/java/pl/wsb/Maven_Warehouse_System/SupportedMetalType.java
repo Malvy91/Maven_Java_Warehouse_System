@@ -1,6 +1,7 @@
 package pl.wsb.Maven_Warehouse_System;
 
 public enum SupportedMetalType {
+    UNKNOWN(1),
     COPPER(8960),
     TIN(7260),
     IRON(7870),
@@ -9,6 +10,7 @@ public enum SupportedMetalType {
     TUNGSTEN(19300),
     GOLD(19300),
     PLATINUM(21500);
+
 
     private int density;
 

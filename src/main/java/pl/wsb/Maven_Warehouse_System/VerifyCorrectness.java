@@ -10,10 +10,9 @@ public class VerifyCorrectness {
     double warehouseMaxSize = 10000; //m3
     VerifyCorrectness(){
     }
-    public void assertString( String whatString, String string){
+    public void assertString( String whatString, String string) throws NameNotFoundException{
         if (string.isEmpty()){
-            System.out.println("Please enter " + whatString + ".");
-            System. exit(0);
+            throw new NameNotFoundException("Name is unknown. Please enter the " + whatString + ".");
         }
     }
     public void verifyClientInMapById(String clientId, Map<String, Client> map) throws ClientNotFoundException{
@@ -26,11 +25,6 @@ public class VerifyCorrectness {
             throw new ClientNotFoundException("Client not found in WarehouseMap!");
         }
     }
-    public void verifyIfWarehouseMapExist(Map<String, Map<SupportedMetalType, Double>> map) throws WarehouseMapNotFoundException{
-        if (map == null){
-            throw new WarehouseMapNotFoundException("Warehouse not found!");
-        }
-    }
     double getTotalVolumeOccupiedByAllClients(){
         double totalVolumeOccupiedByAllClients = 0;
         for ( String i : clientsMap.keySet()) {
@@ -40,14 +34,14 @@ public class VerifyCorrectness {
         }
         return totalVolumeOccupiedByAllClients;
     }
-    public void verifyWarehouseCapacity(double mass) {
+    public void verifyWarehouseCapacity(double mass) throws FullWarehouseException{
         if (getTotalVolumeOccupiedByAllClients() < warehouseMaxSize){
             if (mass > (warehouseMaxSize - getTotalVolumeOccupiedByAllClients())){
                 throw new FullWarehouseException("Warehouse is full. We cannot accept the goods.");
             }
         }
     }
-    public void verifyMetalCorrectness(SupportedMetalType metalType){
+    public void verifyMetalCorrectness(SupportedMetalType metalType) throws ProhibitedMetalTypeException{
         switch (metalType){
             case COPPER, TIN, IRON, LEAD, SILVER, TUNGSTEN, GOLD, PLATINUM:
                 break;
