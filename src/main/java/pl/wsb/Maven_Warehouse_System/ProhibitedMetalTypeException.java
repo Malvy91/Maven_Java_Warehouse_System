@@ -5,6 +5,6 @@ public class ProhibitedMetalTypeException extends RuntimeException {
     }
     public ProhibitedMetalTypeException(String comment){
         System.out.println(comment);
-        System. exit(0);
+        System.exit(0);
     }
 }

@@ -5,6 +5,6 @@ public class FullWarehouseException extends RuntimeException {
     }
     public FullWarehouseException(String comment){
         System.out.println(comment);
-        System. exit(0);
+        System.exit(0);
     }
 }

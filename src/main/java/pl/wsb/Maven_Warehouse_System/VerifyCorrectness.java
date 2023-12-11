@@ -16,10 +16,19 @@ public class VerifyCorrectness {
             System. exit(0);
         }
     }
-    public void verifyClientInMapById(String clientId, Map<String, Client> map) {
-        System.out.println(map.values());
+    public void verifyClientInMapById(String clientId, Map<String, Client> map) throws ClientNotFoundException{
         if (!map.containsKey(clientId)){
-            throw new ClientNotFoundException("pl.wsb.Maven_Warehouse_System.Client not fount in database.");
+            throw new ClientNotFoundException("Client not found in database!");
+        }
+    }
+    public void verifyClientInWarehouseMapById(String clientId, Map<String, Map<SupportedMetalType, Double>> map) throws ClientNotFoundException{
+        if (!map.containsKey(clientId)){
+            throw new ClientNotFoundException("Client not found in WarehouseMap!");
+        }
+    }
+    public void verifyIfWarehouseMapExist(Map<String, Map<SupportedMetalType, Double>> map) throws WarehouseMapNotFoundException{
+        if (map == null){
+            throw new WarehouseMapNotFoundException("Warehouse not found!");
         }
     }
     double getTotalVolumeOccupiedByAllClients(){
@@ -34,7 +43,7 @@ public class VerifyCorrectness {
     public void verifyWarehouseCapacity(double mass) {
         if (getTotalVolumeOccupiedByAllClients() < warehouseMaxSize){
             if (mass > (warehouseMaxSize - getTotalVolumeOccupiedByAllClients())){
-                throw new FullWarehouseException("pl.wsb.Maven_Warehouse_System.Warehouse is full. We cannot accept the goods.");
+                throw new FullWarehouseException("Warehouse is full. We cannot accept the goods.");
             }
         }
     }
