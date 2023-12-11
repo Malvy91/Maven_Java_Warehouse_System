@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class VerifyCorrectness {
     // declaration of map clientsMap, that contains data about metals and its mass that is delivered by clients to warehouse
-    Map<String, Map<SupportedMetalType, Double>> clientsMap = new HashMap<String, Map<SupportedMetalType, Double>>();
+    Map<String, Map<SupportedMetalType, Double>> clientsMap = new HashMap<>();
     // declaration of max size of warehouse
     double warehouseMaxSize = 10000; //m3
     VerifyCorrectness(){
@@ -26,13 +26,13 @@ public class VerifyCorrectness {
         }
     }
     double getTotalVolumeOccupiedByAllClients(){
-        double totalVolumeOccupiedByAllClients = 0;
-        for ( String i : clientsMap.keySet()) {
-            for ( SupportedMetalType j : clientsMap.get(i).keySet()) {
-                totalVolumeOccupiedByAllClients += clientsMap.get(i).get(j);
+            double totalVolumeOccupiedByAllClients = 0;
+            for ( String i : clientsMap.keySet()) {
+                for ( SupportedMetalType j : clientsMap.get(i).keySet()) {
+                    totalVolumeOccupiedByAllClients += clientsMap.get(i).get(j);
+                }
             }
-        }
-        return totalVolumeOccupiedByAllClients;
+            return totalVolumeOccupiedByAllClients;
     }
     public void verifyWarehouseCapacity(double mass) throws FullWarehouseException{
         if (getTotalVolumeOccupiedByAllClients() < warehouseMaxSize){
