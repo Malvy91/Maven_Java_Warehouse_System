@@ -197,11 +197,10 @@ class WarehouseHandlingSystemTest {
     @DisplayName("Check system reaction on unknown user for 'addMetalIngot' calling")
     void checkSystemReactionOnUnknownUserForGetMetalTypesToMassStoredByClientWitOneMetalInMagazine() {
         // given - map with two clients, they have some metals in magazine
-        Map<SupportedMetalType, Double> storedMetalTypesToMassAA8 = warehouseHandlingSystem.getMetalTypesToMassStoredByClient("AA8");
         // when
-        Map<SupportedMetalType, Double> expectedMetalTypesToMass = new HashMap<>();
+        Map<SupportedMetalType, Double> storedMetalTypesToMassAA8 = warehouseHandlingSystem.getMetalTypesToMassStoredByClient("AA8");
         // then
-        Assertions.assertEquals(expectedMetalTypesToMass, storedMetalTypesToMassAA8);
+        Assertions.assertNull(storedMetalTypesToMassAA8);
     }
     @Test
     @DisplayName("Check what is stored in magazine for client with two metals")
