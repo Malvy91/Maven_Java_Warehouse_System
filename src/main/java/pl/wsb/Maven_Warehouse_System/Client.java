@@ -10,7 +10,7 @@ public class Client {
     private String clientId;
     private boolean isPremium;
     private LocalDate creationDate;
-    Map<String, Client> clients = new HashMap<String, Client>();
+    Map<String, Client> clients = new HashMap<>();
     // client's objects' constructor
     Client(){
     }
