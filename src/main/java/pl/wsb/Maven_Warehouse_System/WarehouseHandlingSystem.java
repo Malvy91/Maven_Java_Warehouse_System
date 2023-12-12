@@ -7,30 +7,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.Float.NaN;
+
 /* pl.wsb.Maven_Warehouse_System.WarehouseHandlingSystem implements pl.wsb.Maven_Warehouse_System.Clients and pl.wsb.Maven_Warehouse_System.Warehouse interfaces, what means that
 pl.wsb.Maven_Warehouse_System.WarehouseHandlingSystem contains the methods implementation for both interfaces.
  */
 public class WarehouseHandlingSystem implements Clients, Warehouse{
-    private final Client Client = new Client();
-    private final VerifyCorrectness verifyCorrectness = new VerifyCorrectness();
+    private final CorrectnessVerification correctnessVerification = new CorrectnessVerification();
     private final ClientIdGenerator clientIdGenerator = new ClientIdGenerator();
+    private final DataContainer dataContainer = new DataContainer();
+
     // declaration of variable, where we will deliver creation date
     public LocalDate creationDate;
-    WarehouseHandlingSystem(){
-    }
-    // pl.wsb.Maven_Warehouse_System.Clients interface implementation
+    // Clients interface implementation
     @Override
     public String createNewClient(String firstName, String lastName){
         try {
-            verifyCorrectness.assertString("name", firstName);
+            correctnessVerification.assertString("name", firstName);
             try {
-                verifyCorrectness.assertString("surname", lastName);
-                int freeMapIndex = Client.clients.size();
+                correctnessVerification.assertString("surname", lastName);
+                int freeMapIndex = dataContainer.clients.size();
                 String clientId = clientIdGenerator.generateClientId(firstName, lastName, freeMapIndex);
                 creationDate = LocalDate.now();
 
-                Client clientObject = Client.createClientObject(firstName, lastName, clientId, creationDate);
-                Client.clients.put(clientId, clientObject);
+                Client clientObject = new Client(firstName, lastName, clientId, creationDate);
+                dataContainer.clients.put(clientId, clientObject);
                 return clientId;
             } catch (NameNotFoundException ignored){
                 return "Last name is unknown.";
@@ -43,12 +44,12 @@ public class WarehouseHandlingSystem implements Clients, Warehouse{
     @Override
     public String activatePremiumAccount(String clientId) {
         try {
-            verifyCorrectness.verifyClientInMapById(clientId, Client.clients);
-            if (Client.getPremium(clientId)) {
+            correctnessVerification.verifyClientInMapById(clientId, dataContainer.clients);
+            if (dataContainer.clients.get(clientId).isPremium) {
                 System.out.println("Your client " + clientId + " has premium status.");
                 return "Client has premium status!";
             } else {
-                Client.setIsPremium(clientId, true);
+                dataContainer.clients.get(clientId).isPremium = true;
             }
             return clientId;
         } catch (ClientNotFoundException ignored){
@@ -58,9 +59,9 @@ public class WarehouseHandlingSystem implements Clients, Warehouse{
     @Override
     public String getClientFullName(String clientId) {
         try {
-            verifyCorrectness.verifyClientInMapById(clientId, Client.clients);
-            String clientFirstName = Client.getFirstName(clientId);
-            String clientLastName = Client.getLastName(clientId);
+            correctnessVerification.verifyClientInMapById(clientId, dataContainer.clients);
+            String clientFirstName = dataContainer.clients.get(clientId).firstName;
+            String clientLastName = dataContainer.clients.get(clientId).lastName;
             String clientFirstAndLastName = clientFirstName + " " + clientLastName;
             System.out.println("Clients name and surname: " + clientId + ": " + clientFirstAndLastName);
             return clientFirstAndLastName;
@@ -71,17 +72,17 @@ public class WarehouseHandlingSystem implements Clients, Warehouse{
     @Override
     public LocalDate getClientCreationDate(String clientId) {
         try {
-            verifyCorrectness.verifyClientInMapById(clientId, Client.clients);
-            return Client.getCreationDate(clientId);
+            correctnessVerification.verifyClientInMapById(clientId, dataContainer.clients);
+            return dataContainer.clients.get(clientId).creationDate;
         } catch (ClientNotFoundException ignored) {
-            return LocalDate.MIN;
+            return null;
         }
     }
     @Override
     public boolean isPremiumClient(String clientId) {
         try {
-            verifyCorrectness.verifyClientInMapById(clientId, Client.clients);
-            boolean isPremium = Client.getPremium(clientId);
+            correctnessVerification.verifyClientInMapById(clientId, dataContainer.clients);
+            boolean isPremium = dataContainer.clients.get(clientId).isPremium;
             if (isPremium) {
                 System.out.println("Client " + clientId + " has premium status.");
             } else {
@@ -94,13 +95,13 @@ public class WarehouseHandlingSystem implements Clients, Warehouse{
     }
     @Override
     public int getNumberOfClients(){
-        return Client.clients.size();
+        return dataContainer.clients.size();
     }
     @Override
     public int getNumberOfPremiumClients(){
         int premiumClients= 0;
-        for (String i : Client.clients.keySet()) {
-            if (Client.getPremium(i)) {
+        for (String i : dataContainer.clients.keySet()) {
+            if (dataContainer.clients.get(i).isPremium) {
                 premiumClients++;
             }
         }
@@ -113,23 +114,23 @@ public class WarehouseHandlingSystem implements Clients, Warehouse{
         Map<SupportedMetalType, Double> metalTypesToMassMap;
         double totalMass;
         try {
-            verifyCorrectness.verifyClientInMapById(clientId, Client.clients);
+            correctnessVerification.verifyClientInMapById(clientId, dataContainer.clients);
             try {
-                verifyCorrectness.verifyWarehouseCapacity(mass);
+                correctnessVerification.verifyWarehouseCapacity(mass);
                 try {
-                    verifyCorrectness.verifyMetalCorrectness(metalType);
+                    correctnessVerification.verifyMetalCorrectness(metalType);
 
                     metalTypesToMassMap = getMetalTypesToMassStoredByClient(clientId);
                     if (metalTypesToMassMap == null) {
                         Map<SupportedMetalType, Double> newMetalTypesToMassMap = new HashMap<>();
                         newMetalTypesToMassMap.put(metalType, mass);
-                        verifyCorrectness.clientsMap.put(clientId, newMetalTypesToMassMap);
-                        System.out.println(Client.clients);
+                        dataContainer.clientsMap.put(clientId, newMetalTypesToMassMap);
+                        System.out.println(dataContainer.clients);
                     } else {
                         if (metalTypesToMassMap.containsKey(metalType)) {
                             totalMass = metalTypesToMassMap.get(metalType) + mass;
                             metalTypesToMassMap.replace(metalType, totalMass);
-                            verifyCorrectness.clientsMap.replace(clientId, metalTypesToMassMap);
+                            dataContainer.clientsMap.replace(clientId, metalTypesToMassMap);
                         } else {
                             metalTypesToMassMap.put(metalType, mass);
 
@@ -144,16 +145,17 @@ public class WarehouseHandlingSystem implements Clients, Warehouse{
     }
 
     public Map<SupportedMetalType, Double> getMetalTypesToMassStoredByClient(String clientId) {
-        if (verifyCorrectness.clientsMap == null) {
+        if (dataContainer.clientsMap == null) {
             Map<String, Map<SupportedMetalType, Double>> clientsMap = new HashMap<>();
             Map<SupportedMetalType, Double> newMetalTypesToMassMap = new HashMap<>();
             clientsMap.put(clientId, newMetalTypesToMassMap);
         }
-            return verifyCorrectness.clientsMap.get(clientId);
+        assert dataContainer.clientsMap != null;
+        return dataContainer.clientsMap.get(clientId);
     }
     public double getTotalVolumeOccupiedByClient(String clientId){
         try {
-            verifyCorrectness.verifyClientInWarehouseMapById(clientId, verifyCorrectness.clientsMap);
+            correctnessVerification.verifyClientInWarehouseMapById(clientId, dataContainer.clientsMap);
             double totalVolumeOccupiedByClient = 0.0;
             double VolumeOccupiedBySingleMetal;
             double density = 0.0;
@@ -178,16 +180,16 @@ public class WarehouseHandlingSystem implements Clients, Warehouse{
             }
             return totalVolumeOccupiedByClient;
         } catch (ClientNotFoundException ignored){
-            return 0;
+            return NaN;
         }
     }
 
     public List<SupportedMetalType> getStoredMetalTypesByClient(String clientId){
         try {
-            verifyCorrectness.verifyClientInWarehouseMapById(clientId, verifyCorrectness.clientsMap);
-            return new ArrayList<>(verifyCorrectness.clientsMap.get(clientId).keySet());
+            correctnessVerification.verifyClientInWarehouseMapById(clientId, dataContainer.clientsMap);
+            return new ArrayList<>(dataContainer.clientsMap.get(clientId).keySet());
         } catch (ClientNotFoundException ignored){
-            return new ArrayList<>();
+            return null;
         }
     }
 

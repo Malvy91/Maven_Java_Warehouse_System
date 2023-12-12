@@ -1,10 +1,7 @@
 package pl.wsb.Maven_Warehouse_System;
 
 public class ClientIdGenerator {
-    // declaration of variable, where we will deliver client id
-    private String clientId;
-    ClientIdGenerator(){
-    }
+
     /* method to generate the client Id
    - clientId format [XYnum];
        X - first letter of name
@@ -17,7 +14,6 @@ public class ClientIdGenerator {
         String indexFirstName = Character.toString(charIndexFirstName);
         char charIndexLastName = lastName.charAt(0);
         String indexLastName = Character.toString(charIndexLastName);
-        clientId = indexFirstName + indexLastName + hexValue;
-        return clientId;
+        return indexFirstName + indexLastName + hexValue;
     }
 }

@@ -3,13 +3,10 @@ package pl.wsb.Maven_Warehouse_System;
 import java.util.HashMap;
 import java.util.Map;
 
-public class VerifyCorrectness {
-    // declaration of map clientsMap, that contains data about metals and its mass that is delivered by clients to warehouse
-    Map<String, Map<SupportedMetalType, Double>> clientsMap = new HashMap<>();
+public class CorrectnessVerification {
+    private final DataContainer dataContainer = new DataContainer();
     // declaration of max size of warehouse
     double warehouseMaxSize = 10000; //m3
-    VerifyCorrectness(){
-    }
     public void assertString( String whatString, String string) throws NameNotFoundException{
         if (string.isEmpty()){
             throw new NameNotFoundException("Name is unknown. Please enter the " + whatString + ".");
@@ -25,7 +22,7 @@ public class VerifyCorrectness {
             throw new ClientNotFoundException("Client not found in WarehouseMap!");
         }
     }
-    double getTotalVolumeOccupiedByAllClients(){
+    double getTotalVolumeOccupiedByAllClients(Map<String, Map<SupportedMetalType, Double>> clientsMap){
             double totalVolumeOccupiedByAllClients = 0;
             for ( String i : clientsMap.keySet()) {
                 for ( SupportedMetalType j : clientsMap.get(i).keySet()) {
@@ -35,8 +32,9 @@ public class VerifyCorrectness {
             return totalVolumeOccupiedByAllClients;
     }
     public void verifyWarehouseCapacity(double mass) throws FullWarehouseException{
-        if (getTotalVolumeOccupiedByAllClients() < warehouseMaxSize){
-            if (mass > (warehouseMaxSize - getTotalVolumeOccupiedByAllClients())){
+        double totalVolumeOccupiedByAllClients = getTotalVolumeOccupiedByAllClients(dataContainer.clientsMap);
+        if (totalVolumeOccupiedByAllClients < warehouseMaxSize){
+            if (mass > (warehouseMaxSize - totalVolumeOccupiedByAllClients)){
                 throw new FullWarehouseException("Warehouse is full. We cannot accept the goods.");
             }
         }

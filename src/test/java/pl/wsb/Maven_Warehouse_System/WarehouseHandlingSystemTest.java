@@ -2,6 +2,8 @@ package pl.wsb.Maven_Warehouse_System;
 import org.junit.jupiter.api.*;
 import java.time.LocalDate;
 import java.util.*;
+
+import static java.lang.Float.NaN;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static pl.wsb.Maven_Warehouse_System.SupportedMetalType.*;
 
@@ -90,7 +92,7 @@ class WarehouseHandlingSystemTest {
         // when
         String clientWhomActivatedPremiumAccount = warehouseHandlingSystem.activatePremiumAccount("AA8");
         // then
-        Assertions.assertEquals("Client not found!" , clientWhomActivatedPremiumAccount);
+        Assertions.assertEquals("Client not found!", clientWhomActivatedPremiumAccount);
     }
     @Test
     @DisplayName("Check what is clients' full name")
@@ -108,7 +110,7 @@ class WarehouseHandlingSystemTest {
         // when
         String clientName = warehouseHandlingSystem.getClientFullName("AA8");
         // then
-        Assertions.assertEquals("Client not found!" , clientName);
+        Assertions.assertEquals("Client not found!", clientName);
     }
     @Test
     @DisplayName("Check what is the creation date of new client")
@@ -126,9 +128,8 @@ class WarehouseHandlingSystemTest {
         // given - map with two clients, they have some metals in magazine
         // when
         LocalDate newClientCreationDate = warehouseHandlingSystem.getClientCreationDate("AA8");
-        LocalDate expectedCreationDate = LocalDate.MIN;
         // then
-        Assertions.assertEquals(expectedCreationDate , newClientCreationDate);
+        Assertions.assertNull(newClientCreationDate);
     }
     @Test
     @DisplayName("Check if client does not have premium account")
@@ -208,7 +209,7 @@ class WarehouseHandlingSystemTest {
         // when
         List<SupportedMetalType> expectedMetalTypes = new ArrayList<>();
         // then
-        Assertions.assertEquals(expectedMetalTypes, storedMetalTypeAA8);
+        Assertions.assertNull(storedMetalTypeAA8);
     }
     @Test
     @DisplayName("Check what is stored in magazine for client with one metal  ")
@@ -272,7 +273,7 @@ class WarehouseHandlingSystemTest {
         // when
         double totalVolumeOccupiedByClient = warehouseHandlingSystem.getTotalVolumeOccupiedByClient("AA8");
         // then
-        Assertions.assertEquals(0, totalVolumeOccupiedByClient);
+        Assertions.assertEquals(NaN, totalVolumeOccupiedByClient);
     }
     @Test
     @DisplayName("Check system reaction on full warehouse")
@@ -313,10 +314,9 @@ class WarehouseHandlingSystemTest {
     @DisplayName("Check system reaction on unknown user for 'getStoredMetalTypesByClient' calling")
     void checkSystemReactionOnUnknownUserForGetStoredMetalTypesByClient() {
         // given - map with two clients, they have some metals in magazine
-        List<SupportedMetalType> storedMetalTypeAA8 = warehouseHandlingSystem.getStoredMetalTypesByClient("AA8");
         // when
-        List<SupportedMetalType> expectedMetalTypes = new ArrayList<>();
+        List<SupportedMetalType> storedMetalTypeAA8 = warehouseHandlingSystem.getStoredMetalTypesByClient("AA8");
         // then
-        Assertions.assertEquals(expectedMetalTypes, storedMetalTypeAA8);
+        Assertions.assertNull(storedMetalTypeAA8);
     }
 }

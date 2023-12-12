@@ -7,18 +7,20 @@ import java.time.LocalDate;
 
 class ClientTest {
     Client clientTest = new Client();
+    private final WarehouseHandlingSystem warehouseHandlingSystem = new WarehouseHandlingSystem();
+    private final DataContainer dataContainer = new DataContainer();
     @BeforeEach
     void createClient() {
         LocalDate todayDate = LocalDate.now();
         Client client = new Client("First Name", "Last Name", "QA1", todayDate);
-        clientTest.clients.put("QA1",client);
+        dataContainer.clients.put("QA1",client);
     }
     @Test
     @DisplayName("Check if new client does not have premium account")
     void checkIfClientDoesNotHavePremium() {
         // given - new client created, available in map
         // when
-        Boolean isPremium = clientTest.getPremium("QA1");
+        Boolean isPremium = dataContainer.clients.get("QA1").isPremium;
         // then
         Assertions.assertEquals(false, isPremium);
     }
@@ -26,9 +28,9 @@ class ClientTest {
     @DisplayName("Check if new client has premium account")
     void checkIfClientHasPremium() {
         // given - new client created, available in map
-        clientTest.setIsPremium("QA1", true);
+        dataContainer.clients.get("QA1").isPremium = true;
         // when
-        Boolean isPremium = clientTest.getPremium("QA1");
+        Boolean isPremium = dataContainer.clients.get("QA1").isPremium;
         // then
         Assertions.assertEquals(true, isPremium);
     }
@@ -37,7 +39,7 @@ class ClientTest {
     void checkIfClientHasCorrectId() {
         // given - map with two clients, they have some metals in magazine
         // when
-        String clientId = clientTest.getClientId("QA1");
+        String clientId = dataContainer.clients.get("QA1").clientId;
         // then
         Assertions.assertEquals("QA1", clientId);
     }
@@ -46,7 +48,7 @@ class ClientTest {
     void getFirstName() {
         // given - map with two clients, they have some metals in magazine
         // when
-        String clientFirstName = clientTest.getFirstName("QA1");
+        String clientFirstName = dataContainer.clients.get("QA1").firstName;
         // then
         Assertions.assertEquals("First Name", clientFirstName);
     }
@@ -55,7 +57,7 @@ class ClientTest {
     void getLastName() {
         // given - map with two clients, they have some metals in magazine
         // when
-        String clientLastName = clientTest.getLastName("QA1");
+        String clientLastName = dataContainer.clients.get("QA1").lastName;
         // then
         Assertions.assertEquals("Last Name", clientLastName);
     }
@@ -63,7 +65,7 @@ class ClientTest {
     void getCreationDate() {
         // given - map with two clients, they have some metals in magazine
         // when
-        LocalDate creationDate = clientTest.getCreationDate("QA1");
+        LocalDate creationDate = dataContainer.clients.get("QA1").creationDate;
         LocalDate expectedCreationDate = LocalDate.now();
         // then
         Assertions.assertEquals(expectedCreationDate, creationDate);
@@ -74,23 +76,11 @@ class ClientTest {
         // given - new client created, available in map
         LocalDate todayDate = LocalDate.now();
         Client client2 = new Client("First Name2", "Last Name2", "QA2", todayDate);
-        clientTest.clients.put("QA2",client2);
+        dataContainer.clients.put("QA2",client2);
         // when
-        clientTest.setIsPremium("QA2", true);
-        Boolean isPremium = clientTest.getPremium("QA2");
+        dataContainer.clients.get("QA2").isPremium = true;
+        Boolean isPremium = dataContainer.clients.get("QA2").isPremium;
         // then
         Assertions.assertEquals(true, isPremium);
-    }
-    @Test
-    void createClientObject() {
-        // given - map with two clients, they have some metals in magazine
-        int beforeAddingNewClient = clientTest.clients.size();
-        // when
-        LocalDate todayDate = LocalDate.now();
-        Client client3 = clientTest.createClientObject("First Name3", "Last Name3", "QA3", todayDate);
-        clientTest.clients.put("QA3",client3);
-        int afterAddingNewClient = clientTest.clients.size();
-        // then
-        Assertions.assertEquals(beforeAddingNewClient+1, afterAddingNewClient);
     }
 }
