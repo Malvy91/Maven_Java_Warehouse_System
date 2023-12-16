@@ -60,9 +60,8 @@ public class WarehouseHandlingSystem implements Clients, Warehouse{
     public String getClientFullName(String clientId) {
         try {
             correctnessVerification.verifyClientInMapById(clientId, dataContainer.clients);
-            String clientFirstName = dataContainer.clients.get(clientId).firstName;
-            String clientLastName = dataContainer.clients.get(clientId).lastName;
-            String clientFirstAndLastName = clientFirstName + " " + clientLastName;
+            Client client = dataContainer.clients.get(clientId);
+            String clientFirstAndLastName = client.firstName + " " + client.lastName;
             System.out.println("Clients name and surname: " + clientId + ": " + clientFirstAndLastName);
             return clientFirstAndLastName;
         } catch (ClientNotFoundException ignored) {
