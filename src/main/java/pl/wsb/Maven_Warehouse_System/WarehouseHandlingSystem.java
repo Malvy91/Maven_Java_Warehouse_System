@@ -45,11 +45,11 @@ public class WarehouseHandlingSystem implements Clients, Warehouse{
     public String activatePremiumAccount(String clientId) {
         try {
             correctnessVerification.verifyClientInMapById(clientId, dataContainer.clients);
-            if (dataContainer.clients.get(clientId).isPremium) {
+            if (dataContainer.clients.get(clientId).getIsPremium()) {
                 System.out.println("Your client " + clientId + " has premium status.");
                 return "Client has premium status!";
             } else {
-                dataContainer.clients.get(clientId).isPremium = true;
+                dataContainer.clients.get(clientId).setIsPremium( true );
             }
             return clientId;
         } catch (ClientNotFoundException ignored){
@@ -61,7 +61,7 @@ public class WarehouseHandlingSystem implements Clients, Warehouse{
         try {
             correctnessVerification.verifyClientInMapById(clientId, dataContainer.clients);
             Client client = dataContainer.clients.get(clientId);
-            String clientFirstAndLastName = client.firstName + " " + client.lastName;
+            String clientFirstAndLastName = client.getFirstName() + " " + client.getLastName();
             System.out.println("Clients name and surname: " + clientId + ": " + clientFirstAndLastName);
             return clientFirstAndLastName;
         } catch (ClientNotFoundException ignored) {
@@ -72,7 +72,7 @@ public class WarehouseHandlingSystem implements Clients, Warehouse{
     public LocalDate getClientCreationDate(String clientId) {
         try {
             correctnessVerification.verifyClientInMapById(clientId, dataContainer.clients);
-            return dataContainer.clients.get(clientId).creationDate;
+            return dataContainer.clients.get(clientId).getCreationDate();
         } catch (ClientNotFoundException ignored) {
             return null;
         }
@@ -81,7 +81,7 @@ public class WarehouseHandlingSystem implements Clients, Warehouse{
     public boolean isPremiumClient(String clientId) {
         try {
             correctnessVerification.verifyClientInMapById(clientId, dataContainer.clients);
-            boolean isPremium = dataContainer.clients.get(clientId).isPremium;
+            boolean isPremium = dataContainer.clients.get(clientId).getIsPremium();
             if (isPremium) {
                 System.out.println("Client " + clientId + " has premium status.");
             } else {
@@ -100,7 +100,7 @@ public class WarehouseHandlingSystem implements Clients, Warehouse{
     public int getNumberOfPremiumClients(){
         int premiumClients= 0;
         for (String i : dataContainer.clients.keySet()) {
-            if (dataContainer.clients.get(i).isPremium) {
+            if (dataContainer.clients.get(i).getIsPremium()) {
                 premiumClients++;
             }
         }
