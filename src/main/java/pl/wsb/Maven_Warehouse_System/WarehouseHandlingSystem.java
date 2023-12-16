@@ -24,21 +24,16 @@ public class WarehouseHandlingSystem implements Clients, Warehouse{
     public String createNewClient(String firstName, String lastName){
         try {
             correctnessVerification.assertString("name", firstName);
-            try {
-                correctnessVerification.assertString("surname", lastName);
-                int freeMapIndex = dataContainer.clients.size();
-                String clientId = clientIdGenerator.generateClientId(firstName, lastName, freeMapIndex);
-                creationDate = LocalDate.now();
+            correctnessVerification.assertString("surname", lastName);
+            int freeMapIndex = dataContainer.clients.size();
+            String clientId = clientIdGenerator.generateClientId(firstName, lastName, freeMapIndex);
+            creationDate = LocalDate.now();
 
-                Client clientObject = new Client(firstName, lastName, clientId, creationDate);
-                dataContainer.clients.put(clientId, clientObject);
-                return clientId;
-            } catch (NameNotFoundException ignored){
-                return "Last name is unknown.";
-            }
-
+            Client clientObject = new Client(firstName, lastName, clientId, creationDate);
+            dataContainer.clients.put(clientId, clientObject);
+            return clientId;
         } catch (NameNotFoundException ignored){
-            return "First name is unknown.";
+            return "Name is empty.";
         }
     }
     @Override
@@ -109,41 +104,35 @@ public class WarehouseHandlingSystem implements Clients, Warehouse{
         }
 
     // pl.wsb.Maven_Warehouse_System.Warehouse implementation
-    public void addMetalIngot(String clientId, SupportedMetalType metalType, double mass){
+    public void addMetalIngot(String clientId, SupportedMetalType metalType, double mass) {
         Map<SupportedMetalType, Double> metalTypesToMassMap;
         double totalMass;
         try {
             correctnessVerification.verifyClientInMapById(clientId, dataContainer.clients);
-            try {
-                correctnessVerification.verifyWarehouseCapacity(mass);
-                try {
-                    correctnessVerification.verifyMetalCorrectness(metalType);
+            correctnessVerification.verifyWarehouseCapacity(mass);
+            correctnessVerification.verifyMetalCorrectness(metalType);
 
-                    metalTypesToMassMap = getMetalTypesToMassStoredByClient(clientId);
-                    if (metalTypesToMassMap == null) {
-                        Map<SupportedMetalType, Double> newMetalTypesToMassMap = new HashMap<>();
-                        newMetalTypesToMassMap.put(metalType, mass);
-                        dataContainer.clientsMap.put(clientId, newMetalTypesToMassMap);
-                        System.out.println(dataContainer.clients);
-                    } else {
-                        if (metalTypesToMassMap.containsKey(metalType)) {
-                            totalMass = metalTypesToMassMap.get(metalType) + mass;
-                            metalTypesToMassMap.replace(metalType, totalMass);
-                            dataContainer.clientsMap.replace(clientId, metalTypesToMassMap);
-                        } else {
-                            metalTypesToMassMap.put(metalType, mass);
+            metalTypesToMassMap = getMetalTypesToMassStoredByClient(clientId);
+            if (metalTypesToMassMap == null) {
+                Map<SupportedMetalType, Double> newMetalTypesToMassMap = new HashMap<>();
+                newMetalTypesToMassMap.put(metalType, mass);
+                dataContainer.clientsMap.put(clientId, newMetalTypesToMassMap);
+                System.out.println(dataContainer.clients);
+            } else {
+                if (metalTypesToMassMap.containsKey(metalType)) {
+                    totalMass = metalTypesToMassMap.get(metalType) + mass;
+                    metalTypesToMassMap.replace(metalType, totalMass);
+                    dataContainer.clientsMap.replace(clientId, metalTypesToMassMap);
+                } else {
+                    metalTypesToMassMap.put(metalType, mass);
 
-                        }
-                    }
-                } catch (ProhibitedMetalTypeException ignored){
                 }
-            } catch (FullWarehouseException ignored){
             }
-        } catch (ClientNotFoundException ignored){
+        } catch (ProhibitedMetalTypeException | FullWarehouseException | ClientNotFoundException ignored) {
         }
     }
 
-    public Map<SupportedMetalType, Double> getMetalTypesToMassStoredByClient(String clientId) {
+        public Map<SupportedMetalType, Double> getMetalTypesToMassStoredByClient(String clientId) {
         if (dataContainer.clientsMap == null) {
             Map<String, Map<SupportedMetalType, Double>> clientsMap = new HashMap<>();
             Map<SupportedMetalType, Double> newMetalTypesToMassMap = new HashMap<>();

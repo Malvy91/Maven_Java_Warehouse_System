@@ -45,7 +45,7 @@ class WarehouseHandlingSystemTest {
         // when
         String newClientId = warehouseHandlingSystem.createNewClient("", "Wiktoria");
         // then
-        Assertions.assertEquals("First name is unknown.", newClientId);
+        Assertions.assertEquals("Name is empty.", newClientId);
     }
     @Test
     @DisplayName("Check if app can create client without last name")
@@ -54,7 +54,7 @@ class WarehouseHandlingSystemTest {
         // when
         String newClientId = warehouseHandlingSystem.createNewClient("Aleksandra", "");
         // then
-        Assertions.assertEquals("Last name is unknown.", newClientId);
+        Assertions.assertEquals("Name is empty.", newClientId);
     }
     @Test
     @DisplayName("Check possibility of activating a premium account")
